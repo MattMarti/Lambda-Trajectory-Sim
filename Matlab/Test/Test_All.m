@@ -8,11 +8,13 @@
 clear, clc, clear global
 
 % Numerical Methods
-Test_mmatth3_secantrootsolve_fun
-Test_mmatth3_gausselimination_nonrow_fun
-Test_mmatth3_cubicspline_fun
-Test_mmatth3_rungekuttaint_fun
-Test_mmatth3_finitedifference_fun
+Test_secantrootsolve
+Test_gausselimination
+Test_cubicspline
+Test_rungekuttaint
+Test_finitedifference
+Test_cubicsplineSolve
+Test_cubicsplineInterp
 
 % Ambient
 Test_stdAtmosphereCalc_hgp

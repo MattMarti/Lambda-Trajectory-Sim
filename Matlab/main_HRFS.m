@@ -125,7 +125,7 @@ xdot_fun = @(tk, xk) fHRFSdynamics_1D(tk, xk, p, modot_fun, ...
 % Integrate using Runge-Kutta
 tlims = [t0; tend];
 [xhist, thist, xdothist] ...
-    = mmatth3_rungekuttaint_fun(xdot_fun, x0, tlims, dt, nRK);
+    = rungekuttaint(xdot_fun, x0, tlims, dt, nRK);
 Nt = length(thist);
 
 % Parse integration output
@@ -231,8 +231,8 @@ for i = 1:Nt
     [Dhist(i), qhist(i)] = dragCalc(Cd, Af, rhoi, vhist(i));
     rhohist(i) = rhoi;
 end
-qdothist = mmatth3_finitedifference_fun(qhist, dt, nFD);
-qdotdothist = mmatth3_finitedifference_fun(qdothist, dt, nFD);
+qdothist = finitedifference(qhist, dt, nFD);
+qdotdothist = finitedifference(qdothist, dt, nFD);
 
 % Develop spline interpolation based function for first dynamic pressure
 thist_1 = t0_maxq_1:dt:tend_maxq_1;
@@ -241,17 +241,17 @@ qhist_1 = qhist(1:Nq_1);
 qdothist_1 = qdothist(1:Nq_1);
 qdotdothist_1 = qdotdothist(1:Nq_1);
 qdotlim = [qdothist(1); qdothist(Nq_1)];
-q_1_fun = @(t) mmatth3_cubicspline_fun(...
+q_1_fun = @(t) cubicspline(...
     thist_1, qhist_1, t, qdotlim);
 
 % Dynamic pressure derivative using finite difference
 qdotdotlim = [qdotdothist(1); qdotdothist(Nq_1)];
-qdot_1_fun = @(t) mmatth3_cubicspline_fun(...
-    thist_1, qdothist_1, t, qdotdotlim);
+qdot_splineDataMat = cubicsplineSolve(thist_1, qdothist_1', qdotdotlim');
+qdot_1_fun = @(t) cubicsplineInterp( qdot_splineDataMat, t );
 
 % Dynamic pressure derivative using the spline derivative
 qdot_2_fun = @(t) anonymousFuncSecondArg(q_1_fun, t);
-D_1_fun = @(t) mmatth3_cubicspline_fun(...
+D_1_fun = @(t) cubicspline(...
     thist_1, Dhist(1:Nq_1), t, qdotlim);
 thist_2 = t0_maxq_1:dt/100:tend_maxq_1;
 
@@ -264,7 +264,7 @@ ylabel('Dynamic Pressure [kPa]');
 grid on, grid minor
 
 % Search for first dynamic pressure maximum
-[t_qmax_1, niter, erra] = mmatth3_secantrootsolve_fun(...
+[t_qmax_1, niter, erra] = secantrootsolve(...
     qdot_1_fun, ta_maxq_1, tb_maxq_1);
 qmax_1 = q_1_fun(t_qmax_1);
 hold on
@@ -287,7 +287,7 @@ fprintf('Max Q for Ascent Value: %.2f [kPa]\n', 1e-3*qmax_1);
 fprintf('Drag Force at Max Q: %.2f [kN]\n', 1e-3*D_1_fun(t_qmax_1));
 
 % Altitude of Max Q
-h_fun = @(t) mmatth3_cubicspline_fun(...
+h_fun = @(t) cubicspline(...
     thist_1, hhist(1:Nq_1), t);
 fprintf('Altitude of Max Q: %.3f [km]\n', 1e-3*h_fun(t_qmax_1));
 

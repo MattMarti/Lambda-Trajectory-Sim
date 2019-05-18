@@ -1,11 +1,11 @@
-function [ykhist, tkhist, ydotkhist] = mmatth3_rungekuttaint_fun(...
-    ydot_fun, y0, tlims, h, N, cvec, amat, bvec, errcheckflag)
+function [ykhist, tkhist, ydotkhist] = rungekuttaint(...
+    ydot, y0, tlims, h, N, cvec, amat, bvec, errcheckflag)
 % Runge-Kutta integration
 % This function uses an N-th order Runge Kutta integration technique to
 % solve a time-dependent differential equation.
 % 
 % @arg
-% ydot_fun     - Anonymous Function
+% ydot     - Anonymous Function
 %                Function which returns the time derivative of the state, 
 %                which is a Ny x 1 double vector. Function takes the form
 %                    ydot = f(t, y)
@@ -81,7 +81,7 @@ if nargin < 6
             bvec = [ 0, 1 ];
         case 1
             cvec = 0;
-            amat = 1;
+            amat = 0;
             bvec = 1;
         case 6 % Default Dormand-Prince tableau from Orbit Determination
             cvec = [0; 0.2; 0.3; 0.8; 8/9; 1; 1];
@@ -146,7 +146,7 @@ for k = 2:nt
     tkm1 = tkhist(k-1);
     
     % Runge-Kutta loop formulation
-    Kjhist(:,1) = ydot_fun(tkm1, ykm1);
+    Kjhist(:,1) = ydot(tkm1, ykm1);
     for j = 2:N
         targ = tkm1 + h*cvec(j);
         Karg = ykm1;
@@ -155,7 +155,7 @@ for k = 2:nt
                 Karg = Karg + h*amat(j,i)*Kjhist(:,i);
             end
         end
-        Kjhist(:,j) = ydot_fun(targ, Karg);
+        Kjhist(:,j) = ydot(targ, Karg);
     end
     
     % Final compute state at time tk
@@ -166,7 +166,7 @@ for k = 2:nt
 end
 
 % Save ydot for ouptut
-ydotkhist(:,nt) = ydot_fun(tlims(2), ykhist(:,k));
+ydotkhist(:,nt) = ydot(tlims(2), ykhist(:,k));
 
 end
 

@@ -1,4 +1,4 @@
-%% Test_mmatth3_gausselimination_nonrow_fun.m
+%% Test_gausselimination.m
 % 
 % Test case for the Gauss Elimination function. Based on the solution to
 % AOE 4404 Numerical Methods Assignment 2 Problem 2. Uses Gauss Elimination
@@ -20,7 +20,7 @@ B = [-24,5;-6,3;-9,8;24,2;36,12];
 xtru = A\B;
 
 % Computed solution
-[x_soln, A_aug] = mmatth3_gausselimination_nonrow_fun(A, B);
+[x_soln, A_aug] = gausselimination(A, B);
 
 % Assertion
 precision = 1e-12;
@@ -47,7 +47,7 @@ B = [1;2;2];
 xtru = A\B;
 
 % Computed solution
-[x_soln, A_aug] = mmatth3_gausselimination_nonrow_fun(A, B);
+[x_soln, A_aug] = gausselimination(A, B);
 
 % Assertion
 precision = 1e-12;
@@ -64,4 +64,4 @@ end
 
 
 %% Results
-fprintf('PASSED: Test_mmatth3_gausselimination_nonrow_fun\n');
+fprintf('PASSED: Test_gausselimination\n');

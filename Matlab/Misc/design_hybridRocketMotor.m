@@ -44,7 +44,7 @@ cstar_efficiency = 0.95;
 rhof = 0.033; % [lbm/in^3] Fuel density
 aHTPB = 0.104;
 nHTPB = 0.681;
-rHTPBdot_fun = @(G0) aHTPB*G0^nHTPB; % [in/s] HTPB regression rate
+rHTPBdot = @(G0) aHTPB*G0^nHTPB; % [in/s] HTPB regression rate
 % Oxidizer: Liquid Oxygen
 % Table 16-2
 rvec = (1:.2:3)'; % Mass Mixture Ratio
@@ -90,13 +90,13 @@ fprintf('Assumed Combustion Efficiency:         %.2f\n', cstar_efficiency);
 fprintf('\n--- Combustion Parameters ---\n');
 
 % Determine characteristic velocity and specific heats using cubic spline
-cstar_theory = mmatth3_cubicspline_fun(rvec, cstarvec, r); % [ft/s]
-k = mmatth3_cubicspline_fun(rvec, kvec, r); % [ft/s]
+cstar_theory = cubicspline(rvec, cstarvec, r); % [ft/s]
+k = cubicspline(rvec, kvec, r); % [ft/s]
 
 % Determine pressure ratio from Expansion Ratio
 A2oAt_fun = @(M,k) 1./M.*(2*(1+0.5*(k-1)*M.^2)/(k+1)).^(0.5*(k+1)/(k-1));
 Mach_error_fun = @(M) log(A2oAt_fun(M,k)) - log(A2oAt); % Error function
-M2 = mmatth3_secantrootsolve_fun( Mach_error_fun, 1, 5); % Exit Mach No.
+M2 = secantrootsolve( Mach_error_fun, 1, 5); % Exit Mach No.
 P0oP = @(M,k) (1+0.5*(k-1)*M.^2).^(k/(k-1)); % Stagnation Pressure P0 ~= P1
 % Remember: People Order Our Patties!
 fprintf('Flow Exit Mach Number (M2):            %.2f\n', M2);
@@ -138,17 +138,17 @@ n = nHTPB;
 
 % Determine Ri and db (initial port radius and fuel grain width)
 Rtf_constraint = 0.5*Douter/3; % Constraint for fuel grain diameter
-Rtf_fun = @(Ri, a, n, t) ...
+Rtf = @(Ri, a, n, t) ...
     (a*(2*n+1)*((modot/piN)^n)*t + Ri^(2*n+1))^(1/(2*n+1)); % Eq 16-13: Solution to the fuel regression rate ODE
-Ri_error_fun = @(Ri) Rtf_fun(Ri, aHTPB, nHTPB, tburn) - Rtf_constraint; % Error function for port radius
-Ri = mmatth3_secantrootsolve_fun( Ri_error_fun, 0, 0.5*Douter); % Combustion Port radius
+Ri_error = @(Ri) Rtf(Ri, aHTPB, nHTPB, tburn) - Rtf_constraint; % Error function for port radius
+Ri = secantrootsolve( Ri_error, 0, 0.5*Douter); % Combustion Port radius
 db = 0.5*Douter/3 - Ri; % Fuel burn distance (grain width)
 fprintf('Port radius (Ri):                      %.2f [in]\n', Ri);
 fprintf('Grain width (db):                      %.2f [in]\n', db);
 
 % Determine length of fuel
 G0 = modot / (piN*Ri^2); % [lbm/in^2/s] Oxidizer Mass Velocity
-rdot = rHTPBdot_fun(G0);
+rdot = rHTPBdot(G0);
 L = (mfdot/N) / (2*pi*Ri*rhof*rdot); % [in] fuel length
 fprintf('Oxidizer mass velocity (G0):           %.2f [lbm/in^2/s]\n', G0);
 fprintf('Fuel regression rate (rdot):           %.3f [in/s]\n', rdot);
@@ -211,7 +211,7 @@ db_si = db * in2m;
 L_si = L * in2m;
 
 %  = hybridRocketThrustCalc( ...
-%             g, rhof, regress_fun, rsplinevec, cstarsplinedata, ...
+%             g, rhof, regress, rsplinevec, cstarsplinedata, ...
 %             ksplinedata, eta, At, A2, Ap, Ab, modot, P3 )
 
 % Print SI values for important design parameters

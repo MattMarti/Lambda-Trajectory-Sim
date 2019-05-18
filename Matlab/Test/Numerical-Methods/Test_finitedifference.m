@@ -1,4 +1,4 @@
-%% Test_mmatth3_finitedifference_fun.m
+%% Test_finitedifference.m
 % 
 % Test case for the finite difference function
 % 
@@ -21,7 +21,7 @@ ydottruthhist = -9.81*t + 50;
 % Test Function call
 errvec = [5e-1; 1e-11; 1e-11; 1e-11; 1e-11; 1e-11; 2e-11; 2.5e-11; 5e-11];
 for n = 1:9
-    [ydothist] = mmatth3_finitedifference_fun(yhist, h, n);
+    [ydothist] = finitedifference(yhist, h, n);
     errhist = ydothist - ydottruthhist;
     maxerr = max(abs(errhist));
     assert(maxerr < errvec(n), ...
@@ -42,13 +42,13 @@ n = 5;
 ydottruthhist = [cos(t), -sin(t)];
 
 % Function call
-[ydothist] = mmatth3_finitedifference_fun(yhist, h, n);
+[ydothist] = finitedifference(yhist, h, n);
 
 % Test
 % Test Function call
 errvec = [5e-2; 5e-3; 2.5e-4; 2e-5; 2e-6; 5e-7; 2e-8; 2e-9; 1e-10; 1e-11; 2e-12];
 for n = 1:11
-    [ydothist] = mmatth3_finitedifference_fun(yhist, h, n);
+    [ydothist] = finitedifference(yhist, h, n);
     errhist = ydothist - ydottruthhist;
     maxerr = max(max(abs(errhist)));
     assert(maxerr < errvec(n), ...
@@ -58,5 +58,5 @@ end
 
 %% Pass
 
-fprintf('PASSED: Test_mmatth3_finitedifference_fun\n')
+fprintf('PASSED: Test_finitedifference\n')
 

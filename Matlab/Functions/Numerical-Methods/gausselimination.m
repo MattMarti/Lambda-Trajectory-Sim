@@ -1,4 +1,4 @@
-function [x_soln, A_aug] = mmatth3_gausselimination_nonrow_fun(A, B)
+function [x_soln, A_aug] = gausselimination(A, B)
 % Use Gauss Elimination to solve a set of linear equations A*x = b
 % Uses partial pivoting to avoid singularities
 % 

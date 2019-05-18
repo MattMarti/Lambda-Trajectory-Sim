@@ -1,5 +1,5 @@
 function [finter, dfinter, akvec, bkvec, ckvec, dkvec, xstar] ...
-    = mmatth3_cubicspline_fun(xkvec, fkvec, xinter, fslope)
+    = cubicspline(xkvec, fkvec, xinter, fslope)
 % Cubic spline interpolation function
 % Interpolates function values at specified points using a cubic spline
 % 
@@ -72,7 +72,7 @@ if cbcflag
 end
 
 % Solve tri-diagonal system of equations
-ckvec = mmatth3_gausselimination_nonrow_fun(H, xstar);
+ckvec = gausselimination(H, xstar);
 
 % Compute bkvec and dkvec
 bkvec = zeros(nx,1);

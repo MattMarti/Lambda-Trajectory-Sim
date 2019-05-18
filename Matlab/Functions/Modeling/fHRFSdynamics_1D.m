@@ -1,5 +1,5 @@
-function [ xdotk, data ] = fHRFSdynamics_1D( tk, xk, p, modot_fun, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm_fun )
+function [ xdotk, data ] = fHRFSdynamics_1D( tk, xk, p, modot, ...
+    rsplinevec, cstarsplinedata, ksplinedata, atm )
 % State transition function for modeling the flight of a Hybrid Rocket
 % This function computes the nonlinear partial differential equation:
 % 
@@ -26,7 +26,7 @@ function [ xdotk, data ] = fHRFSdynamics_1D( tk, xk, p, modot_fun, ...
 %                   Rocket parameters struct. Contents are as follows:
 %                   - rhof        - double
 %                                   Fuel density. For Thrust calculation
-%                   - regress_fun - Anonymous Function
+%                   - regress - Anonymous Function
 %                                   Fuel regression rate function. For
 %                                   Thrust calculation
 %                   - eta         - double
@@ -38,20 +38,20 @@ function [ xdotk, data ] = fHRFSdynamics_1D( tk, xk, p, modot_fun, ...
 %                   - A2          - double
 %                                   Nozzle Exit Area. For Thrust
 %                                   calculation
-%                   - Ap_fun      - Anonymous Function
+%                   - Ap      - Anonymous Function
 %                                   Fuel grain total port area. For Thrust
 %                                   calculation. Must accept only "db"
 %                                   (Fuel Grain width) as input:
-%                                       Ap = Ap_fun(db)
+%                                       Ap = Ap(db)
 %                                   calculation
-%                   - Ab_fun      - Anonymous Function
+%                   - Ab      - Anonymous Function
 %                                   Fuel grain exposed burn area. For
 %                                   Thrust calculation. Must accept only 
 %                                   "db" (Fuel Grain width) as input:
-%                                       Ap = Ap_fun(db)
+%                                       Ap = Ap(db)
 %                   - Cd          - double
 %                                   Drag Coefficient. For Drag calculation
-% modot_fun       - Anonymous Function
+% modot       - Anonymous Function
 %                   Oxidizer Mass Flow rate as a function of time
 % rsplinevec      - Nr x 1 double vector
 %                   Fuel/Oxidizer ratio vector for spline interpolation.
@@ -62,13 +62,13 @@ function [ xdotk, data ] = fHRFSdynamics_1D( tk, xk, p, modot_fun, ...
 % ksplinedata     - Nr x 1 double vector
 %                   Specific heat ratio vector for spline interpolation.
 %                   For Thrust calculation
-% atm_fun         - Anonymous Function
+% atm         - Anonymous Function
 %                   Atmospheric pressure and density as a function of 
 %                   altitude. This function must accept the altitude as an
 %                   argument and return at least the Pressure and Density
 %                   value in the form:
-%                       [ P, rho ] = atm_fun( hk )
-% rho_fun         - Anonymous Function
+%                       [ P, rho ] = atm( hk )
+% rho         - Anonymous Function
 %                   Atmospheric density as a function of altitude
 % 
 % @return
@@ -103,15 +103,15 @@ Cd = p.Cd; % Drag Coefficient. For Drag calculation
 
 % Compute altitude and atmospheric parameters
 hk = posk; % Altitude
-[P3, rho] = atm_fun(hk); % Atmosphere pressure and density
+[P3, rho] = atm(hk); % Atmosphere pressure and density
 
 % Compute Accelerations caused by external forces and rocket state
 g = 9.807; % Scalar gavity acceleration
 
 % Compute exposed fuel area, port area, and Oxidizer Mass Flow Rate
-modotk = modot_fun(tk);
-Ap = Ap_fun(db); % Total Port radius
-Ab = Ab_fun(db); % Total exposed fuel burn surface
+modotk = modot(tk);
+Ap_fun = Ap_fun(db); % Total Port radius
+Ab_fun = Ab_fun(db); % Total exposed fuel burn surface
 
 % Only compute a thrust value if the fuel mass is non-zero
 err = 3.5; % Minimum amount of fuel to compute thrust.
@@ -119,7 +119,7 @@ if mfk > err && mok > err
     [ F, rdotk, mfdotk, mdotk, P1, Isp ] ...
             = hybridRocketThrustCalc( ...
                 g, rhof, regress_fun, rsplinevec, cstarsplinedata, ...
-                ksplinedata, eta, At, A2, Ap, Ab, modotk, P3 );
+                ksplinedata, eta, At, A2, Ap_fun, Ab_fun, modotk, P3 );
 else % Empty tank condition
     F = 0;
     rdotk = 0;

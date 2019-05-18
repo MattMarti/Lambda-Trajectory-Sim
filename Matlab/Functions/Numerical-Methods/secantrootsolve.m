@@ -1,4 +1,4 @@
-function [x, niter, erra ] = mmatth3_secantrootsolve_fun(f, a, b, maxiter, errstop)
+function [x, niter, erra ] = secantrootsolve(f, a, b, maxiter, errstop)
 % Solves for the roots of a function using the secant method
 % 
 % @arg

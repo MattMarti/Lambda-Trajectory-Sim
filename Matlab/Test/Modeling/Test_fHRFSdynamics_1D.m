@@ -36,7 +36,7 @@ L = 30.2371738789983; % [m] Fuel grain length (Thrust)
 Ri = 0.363557686863076; % [m] Initial Port radius (Thrust)
 Af = 51.8868458595838; % [m^2] Rocket front area (Drag)
 Cd = 0.25; % Random value for drag coefficient (Drag)
-modot_fun = @(tk) 3096.55536595829;
+modot = @(tk) 3096.55536595829;
 
 % Table 16-2
 rsplinevec = (1:.2:3)'; % Mass Mixture Ratio spline data
@@ -68,7 +68,7 @@ ksplinedata = [
 % Atmosphere function
 RE = 6.356766e6;
 g0 = 9.807;
-atm_fun = @(h) stdAtmosphereCalc_hgp(h, RE, g0);
+atm = @(h) stdAtmosphereCalc_hgp(h, RE, g0);
 
 % Construct rocket state
 tk = 0; % Time
@@ -99,7 +99,7 @@ p = struct( ...
 velk = 0;
 acck = F / mk - g0;
 rdotk = rdot;
-modotk = modot_fun(0);
+modotk = modot(0);
 mfdotk = mfdot;
 mdotk = mdot;
 
@@ -111,8 +111,8 @@ q = 0;
 % Isp
 
 % Function call
-[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot_fun, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm_fun);
+[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
+    rsplinevec, cstarsplinedata, ksplinedata, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);
@@ -148,11 +148,11 @@ assert(abs((Isp-Isp_test)/Isp) < maxerr / 1e-8, 'Bad ISP');
 
 %% Test 2: Set Oxidizer Mass Flow Rate to 0
 
-modot_fun = @(t) 0;
+modot = @(t) 0;
 
 % Function call
-[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot_fun, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm_fun);
+[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
+    rsplinevec, cstarsplinedata, ksplinedata, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);
@@ -187,12 +187,12 @@ assert(isnan(Isp_test), 'Bad ISP');
 
 %% Test 2: Set Oxidizer Mass to 0
 
-modot_fun = @(tk) 3096.55536595829;
+modot = @(tk) 3096.55536595829;
 xk = [ posk; velk; dbi; 0; mfk; mk ];
 
 % Function call
-[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot_fun, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm_fun);
+[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
+    rsplinevec, cstarsplinedata, ksplinedata, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);
@@ -230,8 +230,8 @@ assert(isnan(Isp_test), 'Bad ISP');
 xk = [ posk; velk; dbi; mok; 0; mk ];
 
 % Function call
-[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot_fun, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm_fun);
+[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
+    rsplinevec, cstarsplinedata, ksplinedata, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);
@@ -270,13 +270,13 @@ assert(isnan(Isp_test), 'Bad ISP');
 v = 100;
 h = 100;
 xk = [ h; v; dbi; mok; mfk; mk ];
-[P, rho] = atm_fun(h);
+[P, rho] = atm(h);
 q = 1/2 * rho * v^2;
 D = - Af * Cd * q;
 
 % Function call
-[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot_fun, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm_fun);
+[ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
+    rsplinevec, cstarsplinedata, ksplinedata, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);

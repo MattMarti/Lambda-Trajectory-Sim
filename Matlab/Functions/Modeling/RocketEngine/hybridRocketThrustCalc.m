@@ -89,9 +89,9 @@ mfdot = rhof * Ab * rdot; % Eq 16-11
 r = modot / mfdot;
 
 % Determine characteristic velocity and specific heats using cubic spline
-cstar_theory = mmatth3_cubicspline_fun(rsplinevec, cstarsplinedata, r); % [ft/s]
+cstar_theory = cubicspline(rsplinevec, cstarsplinedata, r); % [ft/s]
 cstar = eta * cstar_theory;
-k = mmatth3_cubicspline_fun(rsplinevec, ksplinedata, r); % [ft/s]
+k = cubicspline(rsplinevec, ksplinedata, r); % [ft/s]
 
 % Determine combustion chamber pressure
 mdot = mfdot + modot;
@@ -101,7 +101,7 @@ P1 = mdot * cstar / At; % Sutton 16-8
 A2oAt = A2 / At; % Sutton 3-19
 A2oAt_fun = @(M) 1./M.*(2*(1+0.5*(k-1)*M.^2)/(k+1)).^(0.5*(k+1)/(k-1)); % Sutton 3-14
 Mach_error_fun = @(M) log(A2oAt_fun(M)) - log(A2oAt); % Error function
-M2 = mmatth3_secantrootsolve_fun( Mach_error_fun, 1, 5); % Exit Mach No.
+M2 = secantrootsolve( Mach_error_fun, 1, 5); % Exit Mach No.
 
 % Compute Stagnation Pressure ratio (Stagnation Pressure P0 ~= P1)
 P1oP2 = (1+0.5*(k-1)*M2.^2).^(k/(k-1)); % Sutton 3-13

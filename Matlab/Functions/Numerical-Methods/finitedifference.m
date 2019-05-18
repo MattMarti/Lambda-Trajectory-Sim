@@ -1,4 +1,4 @@
-function [ydothist] = mmatth3_finitedifference_fun(yhist, h, n)
+function [ydothist] = finitedifference(yhist, h, n)
 % Foward, Central, Backwards finite difference calculation of derivative
 % This function uses the Central Finite Difference method to compute the
 % derivative for the given data vector. At the ends of the array, central
@@ -54,7 +54,7 @@ for i = 1:n
     yfvec = yhist(i+1:i+n,:) - yhist(i,:);
     
     % Compute derivative
-    ydoti = mmatth3_gausselimination_nonrow_fun(hmat, yfvec);
+    ydoti = gausselimination(hmat, yfvec);
     
     % Assign output
     ydothist(i,:) = ydoti(1,:);
@@ -80,8 +80,8 @@ for i = n+1:N-n
     ybvec = yhist(i,:) - yhist(i-1:-1:i-n,:);
     
     % Compute derivative
-    ydoti_f = mmatth3_gausselimination_nonrow_fun(hmat, yfvec);
-    ydoti_b = mmatth3_gausselimination_nonrow_fun(hmat, ybvec);
+    ydoti_f = gausselimination(hmat, yfvec);
+    ydoti_b = gausselimination(hmat, ybvec);
     ydoti = 0.5 * (ydoti_f + ydoti_b);
     
     % Assign output
@@ -105,7 +105,7 @@ for i = N-n+1:N
     ybvec = yhist(i,:) - yhist(i-1:-1:i-n,:);
     
     % Compute derivative
-    ydoti = mmatth3_gausselimination_nonrow_fun(hmat, ybvec);
+    ydoti = gausselimination(hmat, ybvec);
     
     % Assign output
     ydothist(i,:) = ydoti(1,:);

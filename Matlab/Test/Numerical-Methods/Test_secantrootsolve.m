@@ -1,4 +1,4 @@
-%% Test_mmatth3_secantrootsolve_fun.m
+%% Test_secantrootsolve.m
 % 
 % Test case for the Secant Root Solver function. Based on the solution to
 % Problem 2 of Homework 1 f AOE 4404 Numerical Methods
@@ -25,7 +25,7 @@ errstop = 1e-12; % Stopping criteria
 maxiter = 1000;
 
 % Function call
-[x, niter, erra] = mmatth3_secantrootsolve_fun(f, a, b, maxiter, errstop);
+[x, niter, erra] = secantrootsolve(f, a, b, maxiter, errstop);
 
 % Check results
 assert(abs(f(x)) < errstop, 'Results error not less than specified error');
@@ -37,5 +37,5 @@ assert(niter < maxiter, ...
 
 %% Pass
 
-fprintf('PASSED: Test_mmatth3_secantrootsolve_fun\n');
+fprintf('PASSED: Test_secantrootsolve\n');
 
