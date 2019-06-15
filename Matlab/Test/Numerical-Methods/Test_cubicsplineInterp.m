@@ -16,9 +16,9 @@ clear
 f = @(x) sin(x);
 df = @(x) cos(x);
 ddf = @(x) -sin(x);
-xkvec = 0:.1:30;
+xkvec = linspace(0, 10, 20);
 fkvec = f(xkvec);
-xinter = linspace(0, 10, 100);
+xinter = linspace(0, 10, 1000);
 fslope = [ cos(xkvec(1)), cos(xkvec(end)) ]; % Clambed B.C.s
 
 % Solve spline
@@ -32,19 +32,19 @@ ddflag = 1;
 fitrue = f(xinter);
 error = fitrue - finter;
 maxerr = max(abs(error));
-assert(maxerr < 1e-6, 'Spline error too high');
+assert(maxerr < 2.5e-3, 'Spline error too high');
 
 % Test Derivative values
 dfitrue = df(xinter);
 errord = dfitrue - dfinter;
 maxerrd = max(abs(errord));
-assert(maxerrd < 1e-5, 'Spline derivative error too high');
+assert(maxerrd < 1.5e-3, 'Spline derivative error too high');
 
 % Test Derivative values
 ddfitrue = ddf(xinter);
 errordd = ddfitrue - ddfinter;
 maxerrdd = max(abs(errordd));
-assert(maxerrdd < 1e-3, 'Spline second derivative error too high');
+assert(maxerrdd < 2.5e-2, 'Spline second derivative error too high');
 
 
 %% Part 2
@@ -54,7 +54,7 @@ assert(maxerrdd < 1e-3, 'Spline second derivative error too high');
 f = @(x) [sin(x); -10*x.^2 + 50*x + 1000];
 df = @(x) [cos(x); -20*x + 50];
 ddf = @(x) [-sin(x); -20 + 0*x];
-xkvec = 0:.1:10;
+xkvec = linspace(0, 10, 20);
 fkvec = f(xkvec);
 xinter = linspace(0, 10, 1000);
 fslope = [ df(xkvec(1)), df(xkvec(end)) ]; % Clambed B.C.s
@@ -70,19 +70,19 @@ ddflag = 1;
 fitrue = f(xinter);
 error = fitrue - finter;
 maxerr = max(max(abs(error)));
-assert(maxerr < 1e-6, 'Spline error too high');
+assert(maxerr < 2.5e-4, 'Spline error too high');
 
 % Test Derivative values
 dfitrue = df(xinter);
 errord = dfitrue - dfinter;
 maxerrd = max(max(abs(errord)));
-assert(maxerrd < 1e-5, 'Spline derivative error too high');
+assert(maxerrd < 1.5e-3, 'Spline derivative error too high');
 
 % Test Second Derivative values
 ddfitrue = ddf(xinter);
 errordd = ddfitrue - ddfinter;
 maxerrdd = max(max(abs(errordd)));
-assert(maxerrdd < 1e-3, 'Spline second derivative error too high');
+assert(maxerrdd < 2.5e-2, 'Spline second derivative error too high');
 
 
 %% Pass

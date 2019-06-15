@@ -82,6 +82,7 @@ for k = 1:n
         - hkvec(k) * ( 2*ckvec(k) + ckvec(k+1) ) / 3;
     dkvec(k) = ( ckvec(k+1) - ckvec(k) ) / ( 3*hkvec(k) );
 end
+bkvec(nx) = fslope(2);
 
 % Interpolate function
 finter = zeros(size(xinter));
@@ -100,6 +101,7 @@ for i = 1:length(xinter)
     end
     if k > nx % Point is on upper boundary
         finter(i) = akvec(nx);
+        dfinter(i) = bkvec(nx);
         continue;
     end
     

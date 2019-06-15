@@ -16,9 +16,9 @@ clear
 % Given
 f = @(x) sin(x);
 df = @(x) cos(x);
-xkvec = 0:.1:30;
+xkvec = linspace(0, 10, 20);
 fkvec = f(xkvec);
-xinter = linspace(0, 10, 100);
+xinter = linspace(0, 10, 1000);
 fslope = [ cos(xkvec(1)), cos(xkvec(end)) ]; % Clambed B.C.s
 
 % Run function
@@ -29,13 +29,13 @@ fslope = [ cos(xkvec(1)), cos(xkvec(end)) ]; % Clambed B.C.s
 fitrue = f(xinter);
 error = fitrue - finter;
 maxerr = max(abs(error));
-assert(maxerr < 1e-6, 'Spline error too high');
+assert(maxerr < 2.5e-4, 'Spline error too high');
 
 % Test Derivative truth values
 dfitrue = df(xinter);
 errord = dfitrue - dfinter;
 maxerrd = max(abs(errord));
-assert(maxerrd < 1e-5, 'Spline error too high');
+assert(maxerrd < 1.5e-3, 'Spline error too high');
 
 
 %% Pass

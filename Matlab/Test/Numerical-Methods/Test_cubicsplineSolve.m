@@ -17,7 +17,7 @@ clear
 % Given
 f = @(x) sin(x);
 df = @(x) cos(x);
-xkvec = 0:.1:10;
+xkvec = linspace(0, 10, 20);
 fkvec = f(xkvec);
 xinter = linspace(0, 10, 1000);
 fslope = [ df(xkvec(1)), df(xkvec(end)) ]; % Clambed B.C.s
