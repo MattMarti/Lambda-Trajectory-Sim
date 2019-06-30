@@ -39,6 +39,7 @@ nx = length(xkvec);
 cbcflag = 1;
 if nargin < 4
     cbcflag = 0;
+    fslope = [0;0];
 else
     assert(numel(fslope) == 2, 'argument ''fslope'' must have 2 elements');
 end
