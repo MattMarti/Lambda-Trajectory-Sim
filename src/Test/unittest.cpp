@@ -18,7 +18,13 @@ object.
 @author: Matt Marti
 @date: 2019-07-06
 */
-unittest::unittest() {num_instantiations++;}
+unittest::unittest(const char* msg) {
+    if (msg[0] != 0) {
+        std::cout << " > " << msg << std::endl;
+    }
+
+    num_instantiations++;
+}
 
 // Overload () operator to evaluate a test. Argument is a boolean.
 bool unittest::operator()(bool test_case) {
@@ -37,6 +43,7 @@ bool unittest::operator()(bool (*fncptr)()) {
     }
     catch (...) {
         num_exceptions++;
+        print_exception_data();
     }
     return test_pass;
 }
@@ -51,6 +58,7 @@ bool unittest::operator()(bool (*fncptr)(unittest*)) {
     }
     catch (...) {
         num_exceptions++;
+        print_exception_data();
     }
     return test_pass;
 }
@@ -155,10 +163,16 @@ void unittest::test_fail() {num_assertions_failed++;}
 
 // Print messages
 void unittest::print_failure_intro() {
-    std::cout << " Assertion Failed: ";
+    std::cout << "   Assertion Failed: ";
 }
 void unittest::print_error_message(const char* msg) {
-    std::cout << " --> " << msg << std::endl;
+    std::cout << "   -> " << msg << std::endl;
+}
+void unittest::print_exception_data() {
+    using namespace std;
+    cout << "   Exception thrown" << endl;
+    cout << "   -> On unittest instantiation number: " << num_instantiations << endl;
+    cout << "      On test number : " << num_tests << endl;
 }
 
 // Initialize Unit Test static variables

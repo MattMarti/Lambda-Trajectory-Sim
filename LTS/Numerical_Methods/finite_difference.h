@@ -3,7 +3,7 @@
 #include <vector>
 #include "Eigen/Dense"
 
-namespace numerical_methods {
+namespace Numerical_Methods {
     
     /*
     Forward, Central, Backwards finite difference calculation of derivative

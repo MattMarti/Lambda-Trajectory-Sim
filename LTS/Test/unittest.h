@@ -24,12 +24,12 @@ class unittest {
 public:
 
     // Constructor
-    unittest();
+    unittest(const char* msg = "");
 
     // Overload () operator to evaluate a test
     bool operator()(bool test_case);
     bool operator()(bool (*fncptr)());
-    bool operator()(bool(*fncptr)(unittest* testobj));
+    bool operator()(bool(*fncptr)(unittest*));
 
     // Display function
     static void display_stats(bool display_number_of_assertion_calls = false);
@@ -60,6 +60,7 @@ private:
     // Assertion stuff
     static void print_failure_intro();
     static void print_error_message(const char* msg);
+    static void print_exception_data();
 
     // Time handling variables/functions
     static std::chrono::high_resolution_clock::time_point t0; // Start time of tests

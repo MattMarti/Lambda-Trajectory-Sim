@@ -33,8 +33,8 @@ Eigen/Dense
 @author: Matt Marti
 @date: 2019-07-06
 */
-double numerical_methods::finite_difference(std::vector<double> yhist, double h, unsigned int n) {
-    
+double Numerical_Methods::finite_difference(std::vector<double> yhist, double h, unsigned int n) {
+    return 0.0;/*
     // Check yhist shape
     assert n > 0, "Argument 'n' is not greater than zero";
     if yhist.shape.__len__() == 1:
@@ -167,5 +167,5 @@ double numerical_methods::finite_difference(std::vector<double> yhist, double h,
             ydothist[j,i] = ydoti[0,j];
         //
     //
-    return ydot;
+    return ydot;*/
 }

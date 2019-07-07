@@ -16,7 +16,7 @@ Eigen/Dense
 void Numerical_Methods::test_finite_difference_main() {
 
     // Create Unit Test object
-    unittest t = unittest();
+    unittest t = unittest("finite_difference");
 
     // Run tests
     t(&test_nominal_01);
@@ -29,8 +29,8 @@ void Numerical_Methods::test_finite_difference_main() {
 bool Numerical_Methods::test_nominal_01(unittest* test) {
     using namespace std;
     
-    test->assert_equal(1, 0, "Test");
-    
+    return test->assert_equal(1, 0, "Test");
+    /*
     // Function input
     h = 0.1;
     trange = np.arange(0, 10+h, h);
@@ -59,14 +59,14 @@ bool Numerical_Methods::test_nominal_01(unittest* test) {
         //
     //
 
-    return false;
+    return false;*/
 }
 
 // Derivative of nonlinear function is approximate and all orders work.
 // Also test that multiple data entries work.
 bool Numerical_Methods::test_nominal_02(unittest* test) {
-    test->assert_equal(1, 0, "Test");
-    
+    return test->assert_equal(1, 0, "Test");
+    /*
     // Create time array
     h = .1;
     t = np.arange(0, 10+h, h); // t = (0:h:10)'
@@ -102,13 +102,16 @@ bool Numerical_Methods::test_nominal_02(unittest* test) {
                 //
             //
         //
-    return false;
+    return false;*/
 }
 
 // Ensure that n is chosen by default if not specified
 bool Numerical_Methods::test_default_n_value(unittest* test) {
-    test->assert_equal(1, 0, "Test");
     
+    throw std::exception();
+
+    return test->assert_equal(1, 0, "Test");
+    /*
     // Function input
     h = 0.1;
     trange = np.arange(0, 10+h, h);
@@ -134,13 +137,13 @@ bool Numerical_Methods::test_default_n_value(unittest* test) {
     self.assertGreater(maxerr, 1e-1, \
         "Error for default order polynomial is too low")
     //
-    return false;
+    return false;*/
 }
 
 // Ensure that if specified, the custom gauss_elimination function is used
 bool Numerical_Methods::test_customge(unittest* test) {
-    test->assert_equal(1, 0, "Test");
-    
+    return test->assert_equal(1, 0, "Test");
+    /*
     // Function input
     h = 0.1;
     trange = np.arange(0, 10+h, h);
@@ -167,5 +170,5 @@ bool Numerical_Methods::test_customge(unittest* test) {
         "Error for default order polynomial is too low")
     //
     //
-    return false;
+    return false;*/
 }
