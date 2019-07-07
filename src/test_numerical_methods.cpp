@@ -1,14 +1,14 @@
-#include "test_numerical_methods.h"
-#include "numerical_methods.h"
-#include "Test/Unittest.h"
+#include "LTS/test_numerical_methods.h"
+#include "LTS/Numerical_Methods.h"
+#include "LTS/Test/Unittest.h"
 
-#include "Numerical_Methods/test_finite_difference.h"
+#include "LTS/Numerical_Methods/test_finite_difference.h"
 
 #include <iostream>
 
 /*
 Run all tests for the numerical methods.
 */
-void numerical_methods::test_numerical_methods() {
+void Numerical_Methods::test_Numerical_Methods() {
     test_finite_difference_main();
 }

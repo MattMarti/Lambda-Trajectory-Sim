@@ -1,16 +1,16 @@
 #include <iostream>
 
-#include "Test/unittest.h"
-#include "Test/Test_All_Driver.h"
-#include "test_numerical_methods.h"
+#include "LTS/Test/unittest.h"
+#include "LTS/Test/Test_All_Driver.h"
+#include "LTS/test_Numerical_Methods.h"
 
 int test_all() {
 
-	// Run Tests
-    numerical_methods::test_numerical_methods();
+    // Run Tests
+    Numerical_Methods::test_Numerical_Methods();
 
-	// Output
-	unittest::display_stats(true);
+    // Output
+    unittest::display_stats(true);
 
-	return 0;
+    return 0;
 }

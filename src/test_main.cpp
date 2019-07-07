@@ -1,7 +1,7 @@
 
-#include "Test/Test_All_Driver.h"
+#include "LTS/Test/Test_All_Driver.h"
 
 int main() {
-	test_all();
-	return 0;
+    test_all();
+    return 0;
 }

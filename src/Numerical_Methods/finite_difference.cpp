@@ -1,5 +1,6 @@
-//#include "Eigen/Dense"
-#include "Numerical_Methods/finite_difference.h"
+#include <vector>
+#include "Eigen/Dense"
+#include "LTS/Numerical_Methods/finite_difference.h"
 
 /*
 Forward, Central, Backwards finite difference calculation of derivative
@@ -9,39 +10,32 @@ difference doesn't work, so the forward difference method and backwards
 difference methods are used instead.
 
 Note that this function decides for you to use forward and bakwards
-differencing functions at either end of the dataset. This cannot be
-turned off or changed.
+differencing functions at either end of the dataset. This is to avoid
+the problem of running out of data on either side of a particular data
+point.
 
 @arg
-yhist    - M x N numpy.ndarray
-Function value time history, where N is the length of the
-dataset and M is the number different things to take the
-derivative of. M is usually 1. N corresponds to the number
-of samples in the time history of the dataset.
-h        - double
-Time step
-n        - double (optional)
-Order of finite difference
-customge - bool (optional)
-Specify to use the custom gauss elimination function.
-True to use the function, False use numpy's built in function.
-False by default.
+std::vector<double> yhist - N length vector
+                            Function value time history, where N is the length of the
+                            dataset and M is the number different things to take the
+                            derivative of. M is usually 1. N corresponds to the number
+                            of samples in the time history of the dataset.
+double h                  - Time step
+unsigned int n            - (Optional) Order of finite difference. Default is 1.
 
 @return
-ydothist - N x M numpy.ndarray
-Finite difference derivative time history
+ydothist                  - N length vector
+                            Finite difference derivative time history
 
 @dependencies
-python 3.6.0
-numpy
-scipy
+Eigen/Dense
 
 @author: Matt Marti
 @date: 2019-07-06
 */
 double numerical_methods::finite_difference(std::vector<double> yhist, double h, unsigned int n) {
     
-    # Check yhist shape
+    // Check yhist shape
     assert n > 0, "Argument 'n' is not greater than zero";
     if yhist.shape.__len__() == 1:
         M = 1;
@@ -49,81 +43,81 @@ double numerical_methods::finite_difference(std::vector<double> yhist, double h,
         yhist = np.ndarray((1, yhistold.shape[0]));
         for i in range(0, yhistold.shape[0]):
             yhist[0,i] = yhistold[i];
-        #
+        //
     else:
         M = yhist.shape[0];
-    #
+    //
     N = yhist.shape[1];
     assert N >= n+1, 'Not enough data points for given order';
     
-    # Preallocate output
+    // Preallocate output
     ydothist = np.zeros(yhist.shape, np.float64);
     hmat = np.zeros((n,n), np.float64);
     
-    # Forward difference method
+    // Forward difference method
     for i in range(0, n):
         
-        # Delta t matrix
+        // Delta t matrix
         for j in range(1, n+1):
             d = 1.0;
             hj = h*j;
             for k in range(1, n+1):
                 d = d*k;
                 hmat[j-1,k-1] = (hj**k)/d;
-            #
-        #
+            //
+        //
         
-        # Forward finite difference
+        // Forward finite difference
         k = 0;
         yfvec = np.ndarray((M, n));
         for j in range(i+1, i+n+1):
             yfvec[:,k] = yhist[:,j] - yhist[:,i];
             k += 1;
-        #
+        //
         
-        # Compute derivative
+        // Compute derivative
         if customge:
             ydoti = gauss_elimination(hmat, yfvec.transpose());
         else:
             ydoti = spla.solve(hmat, yfvec.transpose());
-        #
+        //
         
-        # Assign output
+        // Assign output
         for j in range(ydothist.shape[0]):
             ydothist[j,i] = ydoti[0,j];
-        #
-    #
+        //
+    //
     
-    # Central difference method
+    // Central difference method
     for i in range( n, N-n ):
         
-        # Delta t matrix
+        // Delta t matrix
         for j in range(1, n+1):
             d = 1.0;
             hj = h*j;
             for k in range(1, n+1):
                 d = d*k;
                 hmat[j-1,k-1] = (hj**k)/d;
-            #
-        #
+            //
+        //
         
-        # Forward finite difference
+        // Forward finite difference
         k = 0;
         yfvec = np.ndarray((M, n));
         for j in range(i+1, i+n+1):
             yfvec[:,k] = yhist[:,j] - yhist[:,i];
             k += 1;
-        #
+        //
         
-        # Backward finite difference
+        // Backward finite difference
         k = 0;
         ybvec = np.ndarray((M, n));
         for j in range(i-1, i-n-1, -1):
             ybvec[:,k] = yhist[:,i] - yhist[:,j];
             k += 1;
-        #
+        //
         
-        # Compute derivative
+        // Compute derivative
         if customge:
             ydoti_f = gauss_elimination(hmat, yfvec.transpose());
             ydoti_b = gauss_elimination(hmat, ybvec.transpose());
@@ -132,46 +126,46 @@ double numerical_methods::finite_difference(std::vector<double> yhist, double h,
             ydoti_f = spla.solve(hmat, yfvec.transpose());
             ydoti_b = spla.solve(hmat, ybvec.transpose());
             ydoti = 0.5 * (ydoti_f + ydoti_b);
-        #
+        //
         
-        # Assign output
+        // Assign output
         for j in range(ydothist.shape[0]):
             ydothist[j,i] = ydoti[0,j];
-        #
-    #
+        //
+    //
     
-    # Backwards difference method
+    // Backwards difference method
     for i in range(N-n, N):
         
-        # Delta t matrix
+        // Delta t matrix
         for j in range(1, n+1):
             d = 1.0;
             hj = h*j;
             for k in range(1, n+1):
                 d = d*k;
                 hmat[j-1,k-1] = (hj**k)/d;
-            #
-        #
+            //
+        //
         
-        # Backward finite difference
+        // Backward finite difference
         k = 0;
         ybvec = np.ndarray((M, n));
         for j in range(i-1, i-n-1, -1):
             ybvec[:,k] = yhist[:,i] - yhist[:,j];
             k += 1;
-        #
+        //
         
-        # Compute derivative
+        // Compute derivative
         if customge:
             ydoti = gauss_elimination(hmat, ybvec.transpose());
         else:
             ydoti = spla.solve(hmat, ybvec.transpose());
-        #
+        //
         
-        # Assign output
+        // Assign output
         for j in range(ydothist.shape[0]):
             ydothist[j,i] = ydoti[0,j];
-        #
-    #
+        //
+    //
     return ydot;
 }
