@@ -1,1 +1,1 @@
-#include "Rocket/Components/External_Component.h"
+#include "Rocket/Components/ExternalComponent.h"

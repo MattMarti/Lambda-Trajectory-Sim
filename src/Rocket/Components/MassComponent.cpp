@@ -1,1 +1,1 @@
-#include "Rocket/Components/Mass_Component.h"
+#include "Rocket/Components/MassComponent.h"

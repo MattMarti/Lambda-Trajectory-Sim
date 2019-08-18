@@ -1,1 +1,1 @@
-#include "Rocket/Components/Symmetric_Component.h"
+#include "Rocket/Components/SymmetricComponent.h"

@@ -1,1 +1,1 @@
-#include "Rocket/Components/Radius_Ring_Component.h"
+#include "Rocket/Components/RadiusRingComponent.h"

@@ -1,1 +1,1 @@
-#include "Rocket/Components/Thickness_Ring_Component.h"
+#include "Rocket/Components/ThicknessRingComponent.h"
