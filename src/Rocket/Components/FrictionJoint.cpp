@@ -1,1 +1,1 @@
-#include "Rocket/Components/FrictionJoint.h"
+#include "Rocket/Components/FrictionJoint.hpp"

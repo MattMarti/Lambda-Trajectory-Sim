@@ -1,1 +1,1 @@
-#include "Rocket/Components/StructuralComponent.h"
+#include "Rocket/Components/StructuralComponent.hpp"

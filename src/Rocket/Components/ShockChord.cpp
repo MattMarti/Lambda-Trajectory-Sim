@@ -1,1 +1,1 @@
-#include "Rocket/Components/ShockChord.h"
+#include "Rocket/Components/ShockChord.hpp"

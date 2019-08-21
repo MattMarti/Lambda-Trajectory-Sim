@@ -1,0 +1,1 @@
+#include "Design/Components/Friction_Joint.hpp"

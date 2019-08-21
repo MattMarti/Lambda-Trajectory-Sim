@@ -1,0 +1,1 @@
+#include "Design/Components/Symmetric_Component.hpp"

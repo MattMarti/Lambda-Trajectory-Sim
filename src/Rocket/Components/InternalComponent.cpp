@@ -1,1 +1,1 @@
-#include "Rocket/Components/InternalComponent.h"
+#include "Rocket/Components/InternalComponent.hpp"

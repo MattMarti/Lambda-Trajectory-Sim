@@ -1,1 +1,1 @@
-#include "Rocket/Components/RingComponent.h"
+#include "Rocket/Components/RingComponent.hpp"
