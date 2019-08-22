@@ -11,9 +11,19 @@ public:
 
     /// Constructor
     /// @param delta_t Time step length between integration periods.
-    Euler_Method(double delta_t);
+    Euler_Method();
 
     /// Iterates via one integration time step
-    void iterate(int n = 1) override;
+    /// @param obj Differential object to integrate
+    /// @param n Number of steps to integrate
+    void iterate(Differential& obj, int n = 1) override {
+        long ii, jj;
+        for (ii = 0; ii < n; ii++) {
+            auto dx_dt = obj.f();
+            for (jj = 0; jj < obj.size(); jj++) {
+                obj[jj] = obj[jj] + dx_dt[jj];
+            }
+        }
+    }
 };
 #endif

@@ -14,13 +14,10 @@ public:
     /// Returns the differential equation dx_dt = f(x)
     virtual std::vector<double> f() = 0;
 
-    /// Grants access to object's current state
-    virtual std::vector<double> get_state() = 0;
+    /// Returns number of elements in object state
+    virtual long size() = 0;
 
-    /// Allows integrator to set the state
-    virtual void set_state(std::vector<double> s) = 0;
-
-
-
+    /// Allows access to elements of the object's state
+    virtual double & operator[](long ii) = 0;
 };
 #endif

@@ -1,4 +1,4 @@
-#include "Util/Sim_Driver.hpp"
+#include "Util/Software_in_the_loop_driver.hpp"
 #include <vector>
 #include <tuple>
 #include <iostream>
@@ -8,12 +8,7 @@
 #include "Util/Math/DiffEq/Differential.hpp"
 #include "Util/Math/DiffEq/Euler_Method.hpp"
 
-class Fabs {
-public:
-    virtual std::vector<double> f() = 0;
-};
-
-class Integration_Tester : public Fabs {
+class Integration_Tester : public Differential {
 
 public:
 
@@ -28,11 +23,11 @@ public:
         x[2] = 10.0;
     }
 
-    double & operator[](size_t ii) {
+    double & operator[](long ii) final {
         return x[ii];
     }
 
-    std::vector<double> f() override {
+    std::vector<double> f() final {
         std::vector<double> dx_dt(3);
         dx_dt[0] = x[1] * delta_t + 0.5 * x[2] * delta_t * delta_t;
         dx_dt[1] = x[2] * delta_t;
@@ -40,21 +35,10 @@ public:
         return dx_dt;
     }
 
-    int size() {
+    long size() final {
         return 3;
     }
 };
-
-template<class C>
-inline void iterate(C& obj, int n = 1) {
-    int ii, jj;
-    for (ii = 0; ii < n; ii++) {
-        auto dx_dt = obj.f();
-        for (jj = 0; jj < obj.size(); jj++) {
-            obj.x[jj] = obj[jj] + dx_dt[jj];
-        }
-    }
-}
 
 void drive_sim() {
     using namespace std;
@@ -71,7 +55,7 @@ void drive_sim() {
 
     // ODE object
     Integration_Tester x = Integration_Tester(delta_t);
-    Euler_Method inter = Euler_Method(delta_t);
+    Euler_Method integrator = Euler_Method();
 
     // Loop integration
     auto t0 = chrono::steady_clock::now();
@@ -104,7 +88,7 @@ void drive_sim() {
             //x[2] = x[2];
 
             // Euler Integrate
-            iterate(x);
+            integrator.iterate(x);
 
             // Iterate
             k++;

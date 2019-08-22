@@ -18,13 +18,18 @@ namespace Numerical_Methods {
     point.
     
     @arg
-    std::vector<double> yhist - N length vector
-                                Function value time history, where N is the length of the
-                                dataset and M is the number different things to take the
-                                derivative of. M is usually 1. N corresponds to the number
-                                of samples in the time history of the dataset.
-    double h                  - Time step
-    unsigned int n            - (Optional) Order of finite difference. Default is 1.
+    const Eigen::MatrixXd &yhist - M x N Matrix
+                                   Function value time history, where N is 
+                                   the length of the dataset and M is the 
+                                   number different of rows to take the 
+                                   derivative of. N corresponds to the 
+                                   number of samples in the time history 
+                                   of the dataset.
+    const Eigen::VectorXd &thist - N legnth vector
+                                   Vector of time values of each 
+                                   measurement.
+    unsigned int n               - (Optional) Order of finite difference. 
+                                   Default is 1.
     
     @return
     ydothist                  - N length vector
@@ -34,7 +39,7 @@ namespace Numerical_Methods {
     Eigen/Dense
     
     @author: Matt Marti
-    @date: 2019-07-06
+    @date: 2019-07-13
     */
-    double finite_difference(std::vector<double> yhist, double h, unsigned int n = 1);
+    Eigen::MatrixXd finite_difference(const Eigen::MatrixXd &yhist, const Eigen::VectorXd &thist, unsigned int n = 1);
 }

@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "Design/Components/Component.hpp"
-#include "Util/Sim_Driver.hpp"
+#include "Util/Software_in_the_loop_driver.hpp"
 
 // Entry point to 6dof simulation. Prases input argument and drives sim
 int main(int argc, char **argv) {

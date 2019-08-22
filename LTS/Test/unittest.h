@@ -1,7 +1,7 @@
 #pragma once
 
 #include <chrono>
-#include <string>
+#include <iostream>
 
 /*
 Unit Test Class
@@ -17,7 +17,7 @@ cases can use the utilities provided without instantiating a new unittest
 object.
 
 @author: Matt Marti
-@date: 2019-07-06
+@date: 2019-07-13
 */
 class unittest {
 
@@ -28,8 +28,8 @@ public:
 
     // Overload () operator to evaluate a test
     bool operator()(bool test_case);
-    bool operator()(bool (*fncptr)());
-    bool operator()(bool(*fncptr)(unittest*));
+    bool operator()(bool (&test_case)());
+    bool operator()(bool(&test_case)(unittest*));
 
     // Display function
     static void display_stats(bool display_number_of_assertion_calls = false);
@@ -37,11 +37,134 @@ public:
     // Reset timer and number of tests/instantiations/failed tests
     static void reset();
 
-    // Assertion functions
-    static bool assert_true(bool a, const char* msg = "");
-    static bool assert_false(bool a, const char* msg = "");
-    static bool assert_equal(double a, double b, const char* msg = "");
-    static bool assert_equal(double a, double b, double precision = 1.0e-6, const char* msg = "");
+    // Assert that a statement is true. Print failure message 'msg' if failed.
+    bool assert_true(bool a, const char* msg) {
+        assertion_call();
+        if (!a) {
+            test_fail();
+            print_failure_intro();
+            std::cout << "Expected true but was false." << std::endl;
+            print_error_message(msg);
+            return false;
+        }
+        return true;
+    }
+
+    // Assert that a statement is false. Print failure message 'msg' if failed.
+    bool assert_false(bool a, const char* msg) {
+        assertion_call();
+        if (a) {
+            test_fail();
+            print_failure_intro();
+            std::cout << "Expected false but was true." << std::endl;
+            print_error_message(msg);
+            return false;
+        }
+        return true;
+    }
+
+    // Assert two doubles are equal. Print failure message 'msg' if failed.
+    bool assert_equal(double a, double b, const char* msg) {
+        return assert_equal(a, b, 1e-6, msg);
+    }
+
+    // Assert two floats are equal. Print failure message 'msg' if failed.
+    bool assert_equal(float a, float b, const char* msg) {
+        return assert_equal((double) a, (double) b, 1e-6, msg);
+    }
+
+    // Assert a float and a double are equal. Print failure message 'msg' if failed.
+    bool assert_equal(float a, double b, const char* msg) {
+        return assert_equal((double) a, b, 1e-6, msg);
+    }
+
+    // Assert a double and a float are equal. Print failure message 'msg' if failed.
+    bool assert_equal(double a, float b, const char* msg) {
+        return assert_equal(a, (double) b, 1e-6, msg);
+    }
+
+    // Assert two Ts are equal. Print failure message 'msg' if failed.
+    template<typename A, typename B>
+    bool assert_equal(A a, B b, const char* msg) {
+        assertion_call();
+        if (a != b) {
+            test_fail();
+            print_failure_intro();
+            std::cout << "Expected " << a << " but was " << b << "." << std::endl;
+            print_error_message(msg);
+            return false;
+        }
+        return true;
+    }
+
+    // Assert two Ts are equal. Print failure message 'msg' if failed.
+    bool assert_equal(double a, double b, double precision, const char* msg) {
+        assertion_call();
+        if (std::abs(a - b) > precision) {
+            test_fail();
+            print_failure_intro();
+            std::cout << "Expected " << a << " but was " << b << "." << std::endl;
+            print_error_message(msg);
+            return false;
+        }
+        return true;
+    }
+
+    // Assert a is less than b
+    template<typename A, typename B>
+    bool assert_less(A a, B b, const char* msg) {
+        assertion_call();
+        if (a >= b) {
+            test_fail();
+            print_failure_intro();
+            std::cout << "Argument " << a << " is more than " << b << "." << std::endl;
+            print_error_message(msg);
+            return false;
+        }
+        return true;
+    }
+
+    // Assert a is less than or equal to b
+    template<typename A, typename B>
+    bool assert_lesseq(A a, B b, const char* msg) {
+        assertion_call();
+        if (a > b) {
+            test_fail();
+            print_failure_intro();
+            std::cout << "Argument " << a << " is more than " << b << "." << std::endl;
+            print_error_message(msg);
+            return false;
+        }
+        return true;
+    }
+
+    // Assert a is more than b
+    template<typename A, typename B>
+    bool assert_more(A a, B b, const char* msg) {
+        assertion_call();
+        if (a <= b) {
+            test_fail();
+            print_failure_intro();
+            std::cout << "Argument " << a << " is less than " << b << "." << std::endl;
+            print_error_message(msg);
+            return false;
+        }
+        return true;
+    }
+
+    // Assert a is more than or equal to b
+    template<typename A, typename B>
+    bool assert_moreeq(A a, B b, const char* msg) {
+        assertion_call();
+        if (a < b) {
+            test_fail();
+            print_failure_intro();
+            std::cout << "Argument " << a << " is larger than " << b << "." << std::endl;
+            print_error_message(msg);
+            return false;
+        }
+        return true;
+    }
 
 private:
 
