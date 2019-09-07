@@ -81,8 +81,10 @@ kvec = [
 % fprintf('--- Not dependent on fuel grain geometry ---\n');
 
 % Determine characteristic velocity and specific heats using cubic spline
-cstar_theory = cubicspline(rvec, cstarvec, r); % [ft/s]
-k = cubicspline(rvec, kvec, r); % [ft/s]
+cstar_spline = cubicspline(rvec', cstarvec');
+cstar_theory = cstar_spline.interp(r); % [ft/s]
+k_spline = cubicspline(rvec', kvec');
+k = k_spline.interp(r); % [ft/s]
 
 % Determine pressure ratio from Expansion Ratio
 A2oAt_fun = @(M,k) 1./M.*(2*(1+0.5*(k-1)*M.^2)/(k+1)).^(0.5*(k+1)/(k-1));
@@ -203,13 +205,17 @@ Go_si = modot_si / Ap_si;
 cstarvec_si = cstarvec * ft2m;
 c_si = Fv_si/mdot_si;
 
+% Create spline objects
+cstar_si_spline = cubicspline(rvec', cstarvec_si');
+k_spline = cubicspline(rvec', kvec');
+
 % Regression function
 regress_fun = @(Go) a_si*(Go^n_si); % Sutton 16-15 and 16-5
 
 % Function call
 [ F_test, rdot_test, mfdot_test, mdot_test, P1_test, Isp_test, CF_test, c_test ] ...
         = hybridRocketThrustCalc( ...
-            g0_si, rhof_si, regress_fun, rvec, cstarvec_si, kvec, eta, ...
+            g0_si, rhof_si, regress_fun, cstar_si_spline, k_spline, eta, ...
             At_si, A2_si, Ap_si, Ab_si, modot_si, P3_si );
 
 % Test values
@@ -229,7 +235,7 @@ assert( abs(c_si - c_test)/c_si < merr, 'Bad Exhaust Velocity');
 % Function call
 [ F_test, rdot_test, mfdot_test, mdot_test, P1_test, Isp_test, CF_test, c_test ] ...
         = hybridRocketThrustCalc( ...
-            g0_si, rhof_si, regress_fun, rvec, cstarvec_si, kvec, eta, ...
+            g0_si, rhof_si, regress_fun, cstar_si_spline, k_spline, eta, ...
             At_si, A2_si, Ap_si, Ab_si, 0, P3_si );
 
 % Test values

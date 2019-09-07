@@ -13,8 +13,6 @@ Test_gausselimination
 Test_cubicspline
 Test_rungekuttaint
 Test_finitedifference
-Test_cubicsplineSolve
-Test_cubicsplineInterp
 
 % Ambient
 Test_stdAtmosphereCalc_hgp

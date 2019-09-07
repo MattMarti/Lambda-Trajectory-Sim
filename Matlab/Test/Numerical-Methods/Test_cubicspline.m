@@ -22,8 +22,8 @@ xinter = linspace(0, 10, 1000);
 fslope = [ cos(xkvec(1)), cos(xkvec(end)) ]; % Clambed B.C.s
 
 % Run function
-[finter, dfinter, akvec, bkvec, ckvec, dkvec, xstar] ...
-    = cubicspline(xkvec, fkvec, xinter, fslope);
+cs = cubicspline(xkvec, fkvec, fslope);
+[ finter, dfinter ] = cs.interp(xinter, true);
 
 % Test Function truth values
 fitrue = f(xinter);

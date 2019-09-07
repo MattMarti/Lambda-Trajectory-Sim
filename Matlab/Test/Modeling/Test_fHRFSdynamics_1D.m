@@ -64,6 +64,8 @@ ksplinedata = [
     1.135;
     1.133;
     1.132]; % [no units] Specific heat ratio spline data
+cstarspline = cubicspline(rsplinevec', cstarsplinedata');
+kspline = cubicspline(rsplinevec', ksplinedata');
 
 % Atmosphere function
 RE = 6.356766e6;
@@ -112,7 +114,7 @@ q = 0;
 
 % Function call
 [ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm);
+    cstarspline, kspline, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);
@@ -152,7 +154,7 @@ modot = @(t) 0;
 
 % Function call
 [ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm);
+    cstarspline, kspline, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);
@@ -192,7 +194,7 @@ xk = [ posk; velk; dbi; 0; mfk; mk ];
 
 % Function call
 [ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm);
+    cstarspline, kspline, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);
@@ -231,7 +233,7 @@ xk = [ posk; velk; dbi; mok; 0; mk ];
 
 % Function call
 [ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm);
+    cstarspline, kspline, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);
@@ -276,7 +278,7 @@ D = - Af * Cd * q;
 
 % Function call
 [ xdotk, data ] = fHRFSdynamics_1D(tk, xk, p, modot, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm);
+    cstarspline, kspline, atm);
 
 % Parse output from xdotk
 velk_test = xdotk(1);
