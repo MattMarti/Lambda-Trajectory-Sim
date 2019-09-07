@@ -3,6 +3,10 @@
 #include "Design/Components/Component.hpp"
 #include "Util/Software_in_the_loop_driver.hpp"
 
+
+#include <standard_atmosphere.hpp>
+#include <Eigen/Core>
+
 // Entry point to 6dof simulation. Prases input argument and drives sim
 int main(int argc, char **argv) {
     using namespace std;
@@ -21,10 +25,18 @@ int main(int argc, char **argv) {
     }
 
 
+    double temperature, pressure, density;
+    std::tie(temperature, pressure, density) = rvt::standard_atmosphere(10);
+    cout << temperature << " " << pressure << " " << density << endl;
+
+    Eigen::Vector3d vec = Eigen::Vector3d::Zero();
+    cout << "Vec = " << vec << endl;
+
+
     // Load open rocket from example
 
     // Run Simulation
-    drive_sim();
+    //drive_sim();
 
     // Save data
 

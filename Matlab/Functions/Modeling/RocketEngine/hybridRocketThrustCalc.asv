@@ -1,7 +1,7 @@
 function [ F, rdot, mfdot, mdot, P1, Isp, CF, c ] ...
         = hybridRocketThrustCalc( ...
-            g, rhof, regress_fun, cstarspline, ...
-            kspline, eta, At, A2, Ap, Ab, modot, P3 )
+            g, rhof, regress_fun, rsplinevec, cstarsplinedata, ...
+            ksplinedata, eta, At, A2, Ap, Ab, modot, P3 )
 % Computes the thrust of a hybrid rocket motor
 % Computes the thrust of a hybrid rocket motor given the ambient
 % pressure, oxidizer flow rate, physical design of the nozzle, etc.
@@ -17,12 +17,16 @@ function [ F, rdot, mfdot, mdot, P1, Isp, CF, c ] ...
 %                   Fuel mass density
 % regress_fun     - Anonymous Function
 %                   Regression Rate as a function of Oxidizer Mass Velocity
-% cstarspline     - cubicspline
-%                   cstar spline object as a function of Fuel/Oxidizer
-%                   ratio for spline interpolation.
-% kspline         - cubicspline
+% rsplinevec      - Nr x 1 double vector
+%                   Fuel/Oxidizer Ratio vector for spline interpolation of 
+%                   cstar and specific heat ratio.
+% cstarsplinedata - Nr x 1 double vector
+%                   cstar data vector as a function of Fuel/Oxidizer ratio
+%                   for spline interpolation.
+% ksplinedata     - Nr x 1 double vector
 %                   Specific heat ratio data vector as a function of 
-%                   Fuel/Oxidizer ratio for spline interpolation.
+%                   Fuel/Oxidizer ratio
+%                   for spline interpolation.
 % eta             - double
 %                   cstar efficiency value, scale 0.0 to 1.0
 % At              - double
@@ -85,9 +89,11 @@ mfdot = rhof * Ab * rdot; % Eq 16-11
 r = modot / mfdot;
 
 % Determine characteristic velocity and specific heats using cubic spline
-cstar_theory = cstarspline.interp(r); % [ft/s]
+cstar_theory = cubicspline(rsplinevec, cstarsplinedata, r); % [ft/s]
+cstar_theory = cstarspline.interp(r);
 cstar = eta * cstar_theory;
-k = kspline.interp(r); % [ft/s]
+k = cubicspline(rsplinevec, ksplinedata, r); % [ft/s]
+k = kspline(r);
 
 % Determine combustion chamber pressure
 mdot = mfdot + modot;

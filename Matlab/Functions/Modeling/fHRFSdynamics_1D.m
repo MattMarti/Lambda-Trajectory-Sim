@@ -1,5 +1,5 @@
 function [ xdotk, data ] = fHRFSdynamics_1D( tk, xk, p, modot, ...
-    rsplinevec, cstarsplinedata, ksplinedata, atm )
+    cstarspline, kspline, atm )
 % State transition function for modeling the flight of a Hybrid Rocket
 % This function computes the nonlinear partial differential equation:
 % 
@@ -53,15 +53,12 @@ function [ xdotk, data ] = fHRFSdynamics_1D( tk, xk, p, modot, ...
 %                                   Drag Coefficient. For Drag calculation
 % modot       - Anonymous Function
 %                   Oxidizer Mass Flow rate as a function of time
-% rsplinevec      - Nr x 1 double vector
-%                   Fuel/Oxidizer ratio vector for spline interpolation.
-%                   For Thrust calculation
-% cstarsplinedata - Nr x 1 double vector
-%                   cstar vector for spline interpolation. For Thrust 
-%                   calculation
-% ksplinedata     - Nr x 1 double vector
-%                   Specific heat ratio vector for spline interpolation.
-%                   For Thrust calculation
+% cstarspline     - cubicspline
+%                   cstar spline object as a function of Fuel/Oxidizer
+%                   ratio for spline interpolation.
+% kspline         - cubicspline
+%                   Specific heat ratio data vector as a function of 
+%                   Fuel/Oxidizer ratio for spline interpolation.
 % atm         - Anonymous Function
 %                   Atmospheric pressure and density as a function of 
 %                   altitude. This function must accept the altitude as an
@@ -118,8 +115,8 @@ err = 3.5; % Minimum amount of fuel to compute thrust.
 if mfk > err && mok > err
     [ F, rdotk, mfdotk, mdotk, P1, Isp ] ...
             = hybridRocketThrustCalc( ...
-                g, rhof, regress_fun, rsplinevec, cstarsplinedata, ...
-                ksplinedata, eta, At, A2, Ap_fun, Ab_fun, modotk, P3 );
+                g, rhof, regress_fun, cstarspline, ...
+                kspline, eta, At, A2, Ap_fun, Ab_fun, modotk, P3 );
 else % Empty tank condition
     F = 0;
     rdotk = 0;

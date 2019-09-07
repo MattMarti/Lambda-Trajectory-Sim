@@ -166,9 +166,9 @@ classdef cubicspline
                     k = k + 1;
                 end
                 if k > nx % Point is on upper boundary
-                    finter(:,j) = this.akmat(:,nx);
+                    finter(:,j) = this.akmat(nx,:)';
                     if dflag
-                        dfinter(:,j) = this.bkmat(:,nx);
+                        dfinter(:,j) = this.bkmat(nx,:)';
                     end
                     continue;
                 end

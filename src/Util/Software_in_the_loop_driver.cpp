@@ -27,7 +27,7 @@ public:
         return x[ii];
     }
 
-    std::vector<double> f() final {
+    inline std::vector<double> f() final {
         std::vector<double> dx_dt(3);
         dx_dt[0] = x[1] * delta_t + 0.5 * x[2] * delta_t * delta_t;
         dx_dt[1] = x[2] * delta_t;
@@ -35,7 +35,7 @@ public:
         return dx_dt;
     }
 
-    long size() final {
+    inline long size() final {
         return 3;
     }
 };
@@ -57,7 +57,7 @@ void drive_sim() {
     Integration_Tester x = Integration_Tester(delta_t);
     Euler_Method integrator = Euler_Method();
 
-    // Loop integration
+    // Loop integration for Run-Time-Polymorphism
     auto t0 = chrono::steady_clock::now();
     for (int jj = 0; jj < JJ; jj++) {
 
@@ -76,16 +76,6 @@ void drive_sim() {
         // Integrate
         k = 0;
         while (k < K) {
-
-            // Euler Integrate
-            //x0 = x0 + x1 * delta_t + 0.5 * x2 * delta_t * delta_t;
-            //x1 = x1 + x2 * delta_t;
-            //x2 = x2;
-
-            // Euler Integrate
-            //x[0] = x[0] + x[1] * delta_t + 0.5 * x[2] * delta_t * delta_t;
-            //x[1] = x[1] + x[2] * delta_t;
-            //x[2] = x[2];
 
             // Euler Integrate
             integrator.iterate(x);

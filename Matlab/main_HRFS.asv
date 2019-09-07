@@ -291,8 +291,10 @@ fprintf('Max Q for Ascent Value: %.2f [kPa]\n', 1e-3*qmax_1);
 fprintf('Drag Force at Max Q: %.2f [kN]\n', 1e-3*D_1_spline.interp(t_qmax_1));
 
 % Altitude of Max Q
-h_spline = cubicspline(thist_1, hhist(1:Nq_1));
-fprintf('Altitude of Max Q: %.3f [km]\n', 1e-3*h_spline.interp(t_qmax_1));
+h_spline = cubicspline(thist_1, hhist(1:Nq_1)');
+h_fun = @(t) cubicspline(...
+    thist_1, hhist(1:Nq_1), t);
+fprintf('Altitude of Max Q: %.3f [km]\n', 1e-3*h_fun(t_qmax_1));
 
 % Ascent Dynamic Pressure curve 2 
 figure(12); hold off

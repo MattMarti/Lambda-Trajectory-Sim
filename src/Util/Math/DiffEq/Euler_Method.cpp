@@ -11,5 +11,4 @@ void iterate(Differential& obj, int n = 1) {
             obj[jj] = obj[jj] + dx_dt[jj];
         }
     }
-
 }
