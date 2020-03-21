@@ -1,4 +1,4 @@
-function [P, rho, T] = stdAtmosphereCalc_hgp(h, RE, g0)
+function [P, rho, T] = stdAtmosphereCalc_hgp(h)
 % Computes the Temperature, Pressure, and Density of the Atmosphere
 % Uses the Geometric Alitude to compute the Temperature, Pressure, and
 % Density of the atmosphere according to the Standard Atmosphere Model
@@ -17,10 +17,6 @@ function [P, rho, T] = stdAtmosphereCalc_hgp(h, RE, g0)
 % @arg
 % h   - double
 %       Altitude
-% RE  - double
-%       Planetary Radius
-% g0  - double
-%       Sea level gravity (gravity at R)
 % 
 % @return
 % P   - double
@@ -33,11 +29,10 @@ function [P, rho, T] = stdAtmosphereCalc_hgp(h, RE, g0)
 % @author: Matt Marti
 % @date: 2019-04-25
 
-% Define global variables (Gas Constant)
-global R
-if ~numel(R)
-    constants_HRFS;
-end
+% Define constants
+R = 287.0429126675655880; % Gas Constant
+RE = 6371e3; % Earth Average Radius
+g0 = 9.81; % Sea-level gravity
 
 % Compute geopotential altitude
 hgp = h * RE / (RE + h);
